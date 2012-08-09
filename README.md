@@ -9,8 +9,8 @@ create an automated media encoding server.
 
 2. Create a `wordpress.conf` file with the WordPress credentials:
 
-    WP_USER="<wordpress_user>"
-		WP_PASSWORD="<wordpress_password>"
+    WP_USER="wordpress_user"
+		WP_PASSWORD="wordpress_password"
 
 Please note the syntax - no spaces and your user and password wrapped in double quotes.
 
