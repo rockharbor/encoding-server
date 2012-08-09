@@ -1,7 +1,17 @@
 #!/bin/bash
 
+. media_common.sh
+
+LOG=encoding.log
+
+# create log file
+if [ ! -f "$LOG" ]; then
+	> $LOG
+fi
+exec 1>$LOG
+
 if [ ! -f "wordpress.conf" ]; then
-	echo "Missing WordPress credentials"
+	log "Missing WordPress credentials"
 	exit 0
 fi
 
@@ -26,14 +36,14 @@ for S in ${ARRAY[@]}; do
 
 	# watch these folders for FTP uploads, which are renamed and moved to a
 	# staging area to await compression
-	echo "Setting up rename watch on $PREFIX/$FOLDER for $SUBDOMAIN"
+	log "Setting up rename watch on $PREFIX/$FOLDER for $SUBDOMAIN"
 	watchmedo shell-command \
 		--command=$EXECDIR'/rename_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'"' \
 		"$PREFIX/$FOLDER" &
 	
 	# watch these folders for compressed items, which are uploaded to their
 	# respective website
-	echo "Setting up upload watch on $PREFIX/$FOLDER/Compressed/Output for $SUBDOMAIN"
+	log "Setting up upload watch on $PREFIX/$FOLDER/Compressed/Output for $SUBDOMAIN"
 	watchmedo shell-command \
 		--command=$EXECDIR'/process_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'" "'$WP_USER'" "'$WP_PASSWORD'"' \
 		"$PREFIX/$FOLDER/Compressed" &

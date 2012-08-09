@@ -17,6 +17,8 @@ MODIFIED=$(stat -f "%c" "$FILE")
 DATE=$(date -jf "%s" "$MODIFIED" +"%Y%m%d")
 FILEPATH=$(dirname "$FILE")
 
+log "Moving file: $FILE ${FILEPATH}/Compressed/${DATE}_${SUBDOMAIN}_message.${EXT}"
+
 mv -f "$FILE" "${FILEPATH}/Compressed/${DATE}_${SUBDOMAIN}_message.${EXT}"
 
 exit 0
