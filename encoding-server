@@ -1,0 +1,40 @@
+#!/bin/bash
+
+if [ ! -f ".wordpress" ]; then
+	echo "Missing WordPress credentials"
+	exit 0
+fi
+
+# import wordpress credentials
+. ".wordpress"
+
+EXECDIR=$(pwd)
+
+# array of sites subdomains:folder
+ARRAY=(
+"missionviejo:RHMV"
+"fullerton:RHF"
+"huntingtonbeach:RHHB"
+"orange:RHO"
+)
+
+PREFIX="/Volumes/Media/FTP/Messages"
+
+for S in ${ARRAY[@]}; do
+	SUBDOMAIN=${S%%:*}
+	FOLDER=${S##*:}
+
+	# watch these folders for FTP uploads, which are renamed and moved to a
+	# staging area to await compression
+	echo "Setting up rename watch on $PREFIX/$FOLDER for $SUBDOMAIN"
+	watchmedo shell-command \
+		--command=$EXECDIR'/rename_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'"' \
+		"$PREFIX/$FOLDER" &
+	
+	# watch these folders for compressed items, which are uploaded to their
+	# respective website
+	echo "Setting up upload watch on $PREFIX/$FOLDER/Compressed/Output for $SUBDOMAIN"
+	watchmedo shell-command \
+		--command=$EXECDIR'/process_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'" "'$WP_USER'" "'$WP_PASSWORD'"' \
+		"$PREFIX/$FOLDER/Compressed" &
+done
