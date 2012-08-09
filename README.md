@@ -7,12 +7,13 @@ create an automated media encoding server.
 
 1. Install [watchdog][1] and [Adobe Media Encoder][2]
 
-2. Create a `wordpress.conf` file with the WordPress credentials:
+2. Create a `wordpress.conf` file with the WordPress credentials (Please note the syntax -
+   no spaces and your user and password wrapped in double quotes.):
 
+    ```
     WP_USER="wordpress_user"
-		WP_PASSWORD="wordpress_password"
-
-Please note the syntax - no spaces and your user and password wrapped in double quotes.
+    WP_PASSWORD="wordpress_password"
+    ```
 
 3. Ensure that Adobe Media Encoder is running and watching the correct folders.
 
