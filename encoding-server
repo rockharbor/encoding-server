@@ -1,12 +1,12 @@
 #!/bin/bash
 
-if [ ! -f ".wordpress" ]; then
+if [ ! -f "wordpress.conf" ]; then
 	echo "Missing WordPress credentials"
 	exit 0
 fi
 
 # import wordpress credentials
-. ".wordpress"
+. "wordpress.conf"
 
 EXECDIR=$(pwd)
 
