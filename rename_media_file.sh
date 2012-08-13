@@ -6,6 +6,9 @@ FILE="$1"
 EVENT="$2"
 SUBDOMAIN="$3"
 
+# only process valid files
+valid_file "$FILE"
+
 # only process new files
 if [ ! -f "$FILE" -o "$EVENT" != "created" ]; then
 	exit 0

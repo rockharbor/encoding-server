@@ -12,6 +12,9 @@ SUBDOMAIN="$3"
 WP_USERNAME="$4"
 WP_PASSWORD="$5"
 
+# only process valid files
+valid_file "$FILE"
+
 # only process new files
 if [ ! -f "$FILE" -o "$EVENT" != "created" ]; then
 	exit 0
