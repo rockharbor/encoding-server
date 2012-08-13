@@ -46,5 +46,5 @@ for S in ${ARRAY[@]}; do
 	log "Setting up upload watch on $PREFIX/$FOLDER/Compressed/Output for $SUBDOMAIN"
 	watchmedo shell-command \
 		--command=$EXECDIR'/process_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'" "'$WP_USER'" "'$WP_PASSWORD'"' \
-		"$PREFIX/$FOLDER/Compressed" &
+		"$PREFIX/$FOLDER/Compressed/Output" &
 done
