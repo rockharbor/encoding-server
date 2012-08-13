@@ -20,11 +20,11 @@ if [ ! -f "$FILE" -o "$EVENT" != "created" ]; then
 	exit 0
 fi
 
-log "Processing file: $FILE"
+log "Watching file: $FILE"
 
 wait_for_file "$FILE"
 
-log "POSTing to WordPress"
+log "Processing file: $FILE"
 
 # upload to WordPress
 curl -i -F "file=@$FILE" -F "username=$WP_USERNAME" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
