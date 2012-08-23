@@ -47,5 +47,10 @@ Below is an explaination of the watch/encode/upload process.
    `Output` folder.
 5. Finally, the two output files are uploaded to WordPress
 
+## Plans
+
+1. Remove all hardcoded stuff
+2. Create a start/stop action: `encoding-server start`
+
 [1]: https://github.com/gorakhargosh/watchdog
 [2]: http://ffmpeg.org/
