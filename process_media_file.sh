@@ -59,7 +59,6 @@ ffmpeg -i "$FILE" \
 log "Moving source to: ${FILEPATH}/Source"
 mv -f "$FILE" "${FILEPATH}/Source/${DATE}_${SUBDOMAIN}_message.${EXT}"
 
-exit 0
 # upload video file 
 curl -i -F "file=@$VIDOUTPUT" -F "username=$WP_USERNAME" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
 
