@@ -17,6 +17,23 @@ create an automated media encoding server.
 
 3. From the terminal in the directory these scripts are located, run `encoding-server`
 
+## Directory structure
+
+The watch directories are hardcoded into the `encoding-server` script. The basic structure
+looks like this:
+
+    ```
+    /Volumes
+      /Media
+        /FTP
+          /Messages
+            /<campus_short_name>
+              /Output
+              /Source
+    ```
+
+Where `<campus_short_name>` is RHO, RHMV, etc. 
+
 ## Workflow
 
 Below is an explaination of the watch/encode/upload process.
