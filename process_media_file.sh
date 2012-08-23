@@ -26,8 +26,7 @@ log "Watching file: $FILE"
 wait_for_file "$FILE"
 
 EXT=$(echo "$FILE" | awk -F . '{if (NF>1) {print $NF}}')
-MODIFIED=$(stat -f "%c" "$FILE")
-DATE=$(date -jf "%s" "$MODIFIED" +"%Y%m%d")
+DATE=$(date -j -vsun +"%Y%m%d")
 FILEPATH=$(dirname "$FILE")
 
 VIDOUTPUT="${FILEPATH}/Output/${DATE}_${SUBDOMAIN}_message.mp4"
