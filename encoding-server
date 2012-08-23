@@ -15,9 +15,6 @@ if [ ! -f "wordpress.conf" ]; then
 	exit 0
 fi
 
-# import wordpress credentials
-. "wordpress.conf"
-
 EXECDIR=$(pwd)
 
 # array of sites subdomains:folder
@@ -34,17 +31,10 @@ for S in ${ARRAY[@]}; do
 	SUBDOMAIN=${S%%:*}
 	FOLDER=${S##*:}
 
-	# watch these folders for FTP uploads, which are renamed and moved to a
-	# staging area to await compression
-	log "Setting up rename watch on $PREFIX/$FOLDER for $SUBDOMAIN"
+	# watch these folders for FTP uploads, which are renamed, moved,
+	# compressed and uploaded to WordPress
+	log "Setting up watch on $PREFIX/$FOLDER for $SUBDOMAIN"
 	watchmedo shell-command \
-		--command=$EXECDIR'/rename_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'"' \
+		--command=$EXECDIR'/process_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'"' \
 		"$PREFIX/$FOLDER" &
-	
-	# watch these folders for compressed items, which are uploaded to their
-	# respective website
-	log "Setting up upload watch on $PREFIX/$FOLDER/Compressed/Output for $SUBDOMAIN"
-	watchmedo shell-command \
-		--command=$EXECDIR'/process_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'" "'$WP_USER'" "'$WP_PASSWORD'"' \
-		"$PREFIX/$FOLDER/Compressed/Output" &
 done
