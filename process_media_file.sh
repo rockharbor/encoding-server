@@ -35,7 +35,7 @@ AUDOUTPUT="${FILEPATH}/Output/${DATE}_${SUBDOMAIN}_message.mp3"
 log "Processing file: $FILE"
 
 # convert video and save it in the output directory
-ffmpeg -i $FILE \
+ffmpeg -i "$FILE" \
 -vcodec libx264 \
 -preset slow \
 -b:v 1200k \
@@ -47,13 +47,13 @@ ffmpeg -i $FILE \
 -threads 0 \
 -acodec libvo_aacenc \
 -b:a 128k \
-$VIDOUTPUT
+"$VIDOUTPUT"
 
 # convert audio and save it in the output directory
-ffmpeg -i $FILE \
+ffmpeg -i "$FILE" \
 -acodec libmp3lame \
 -b:a 128k \
-$AUDOUTPUT
+"$AUDOUTPUT"
 
 # after converting it, move it to the source folder
 log "Moving source to: ${FILEPATH}/Source"
