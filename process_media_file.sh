@@ -38,9 +38,9 @@ log "Processing file: $FILE"
 ffmpeg -i "$FILE" \
 -vcodec libx264 \
 -preset slow \
--b:v 1200k \
--maxrate 1200k \
--bufsize 2400k \
+-b:v 1500k \
+-maxrate 1500k \
+-bufsize 3000k \
 -filter_complex pad="ih*16/9:ih:(ow-iw)/2:(oh-ih)/2" \
 -aspect 16:9 \
 -s 1280x720 \
