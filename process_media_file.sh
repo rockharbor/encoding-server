@@ -45,7 +45,7 @@ cp "$FILE" "/tmp/${FILENAME}"
 # convert video and save it in the output directory
 ffmpeg -i "$TMPFILE" \
 -vcodec libx264 \
--preset slow \
+-preset fast \
 -b:v 1500k \
 -maxrate 1500k \
 -bufsize 3000k \
@@ -61,6 +61,7 @@ ffmpeg -i "$TMPFILE" \
 ffmpeg -i "$TMPFILE" \
 -acodec libmp3lame \
 -b:a 128k \
+-vn \
 "$TMPAUD"
 
 # after converting it, move source file to correct path and
