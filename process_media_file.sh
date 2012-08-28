@@ -1,5 +1,7 @@
 #!/bin/bash
 
+STARTTIME=$(date +"%s")
+
 . media_common.sh
 
 # Script triggered by `watchdog` when a file is created within a directory.
@@ -80,5 +82,10 @@ curl -i -F "file=@$TMPAUD" -F "username=$WP_USER" -F "password=$WP_PASSWORD" htt
 # move to the server
 AUDOUTPUT="${OUTPUT}/${DATE}_${SUBDOMAIN}_message.mp3"
 mv "$TMPAUD" "$AUDOUTPUT"
+
+ENDTIME=$(date +"%s")
+EXECTIME=$(expr $ENDTIME - $STARTTIME)
+
+log "Processing completed (${EXECTIME}s): $FILE"
 
 exit 0
