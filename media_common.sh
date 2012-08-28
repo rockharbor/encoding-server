@@ -5,7 +5,7 @@
 # Checks if we should operate on this file
 function valid_file() {
 	shopt -s nocasematch
-	REGEX=".\.(mp4|mp3|mov)$"
+	REGEX=".\.(mp4|mov|mpg)$"
 	if echo $1 | grep -Eq "$REGEX" ; then
 		return 1
 	else
