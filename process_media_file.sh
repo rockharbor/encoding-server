@@ -29,13 +29,19 @@ EXT=$(echo "$FILE" | awk -F . '{if (NF>1) {print $NF}}')
 DATE=$(date -j -vsun +"%Y%m%d")
 FILEPATH=$(dirname "$FILE")
 
-VIDOUTPUT="${FILEPATH}/Output/${DATE}_${SUBDOMAIN}_message.mp4"
-AUDOUTPUT="${FILEPATH}/Output/${DATE}_${SUBDOMAIN}_message.mp3"
+OUTPUT="${FILEPATH}/Output"
+TMPVID="/tmp/${DATE}_${SUBDOMAIN}_message.mp4"
+TMPAUD="/tmp/${DATE}_${SUBDOMAIN}_message.mp3"
 
 log "Processing file: $FILE"
 
+# copy file to local disk
+FILENAME=$(basename $FILE)
+TMPFILE="/tmp/${FILENAME}"
+cp "$FILE" "/tmp/${FILENAME}"
+
 # convert video and save it in the output directory
-ffmpeg -i "$FILE" \
+ffmpeg -i "$TMPFILE" \
 -vcodec libx264 \
 -preset slow \
 -b:v 1500k \
@@ -47,22 +53,32 @@ ffmpeg -i "$FILE" \
 -threads 0 \
 -acodec libvo_aacenc \
 -b:a 128k \
-"$VIDOUTPUT"
+"$TMPVID"
 
 # convert audio and save it in the output directory
-ffmpeg -i "$FILE" \
+ffmpeg -i "$TMPFILE" \
 -acodec libmp3lame \
 -b:a 128k \
-"$AUDOUTPUT"
+"$TMPAUD"
 
-# after converting it, move it to the source folder
+# after converting it, move source file to correct path and
+# remove temporary file
 log "Moving source to: ${FILEPATH}/Source"
 mv -f "$FILE" "${FILEPATH}/Source/${DATE}_${SUBDOMAIN}_message.${EXT}"
+rm "$TMPFILE"
 
 # upload video file 
-curl -i -F "file=@$VIDOUTPUT" -F "username=$WP_USERNAME" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
+curl -i -F "file=@$TMPVID" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
+
+# move to the server
+VIDOUTPUT="${OUTPUT}/${DATE}_${SUBDOMAIN}_message.mp4"
+mv "$TMPVID" "$VIDOUTPUT"
 
 # upload audio file
-curl -i -F "file=@$AUDOUTPUT" -F "username=$WP_USERNAME" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
+curl -i -F "file=@$TMPAUD" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
+
+# move to the server
+AUDOUTPUT="${OUTPUT}/${DATE}_${SUBDOMAIN}_message.mp3"
+mv "$TMPAUD" "$AUDOUTPUT"
 
 exit 0
