@@ -15,7 +15,7 @@ if [ ! -f "wordpress.conf" ]; then
 	exit 0
 fi
 
-EXECDIR=$(pwd)
+EXECDIR="/encoder"
 
 # array of sites subdomains:folder
 ARRAY=(
@@ -34,7 +34,7 @@ for S in ${ARRAY[@]}; do
 	# watch these folders for FTP uploads, which are renamed, moved,
 	# compressed and uploaded to WordPress
 	log "Setting up watch on $PREFIX/$FOLDER for $SUBDOMAIN"
-	watchmedo shell-command \
+	/usr/local/bin/watchmedo shell-command \
 		--command=$EXECDIR'/process_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'"' \
 		"$PREFIX/$FOLDER" &
 done
