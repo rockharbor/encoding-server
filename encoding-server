@@ -38,3 +38,9 @@ for S in ${ARRAY[@]}; do
 		--command=$EXECDIR'/process_media_file.sh "${watch_src_path}" "${watch_event_type}" "'$SUBDOMAIN'"' \
 		"$PREFIX/$FOLDER" &
 done
+
+# make launchd happy
+# http://developer.apple.com/library/mac/#documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html#//apple_ref/doc/uid/TP40001762-104142
+sleep 10
+
+exit 0
