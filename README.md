@@ -42,7 +42,7 @@ Below is an explaination of the watch/encode/upload process.
 2. When a file is detected, it is watched until it is fully uploaded
 3. After the upload completes, the file is converted using ffmpeg into a
    streaming video file as well as an mp3.
-4. When the encoding process completes, the source is renamed and moved 
+4. When the encoding process completes, the source moved 
    into the `Source` folder, and the converted files are moved into the
    `Output` folder.
 5. Finally, the two output files are uploaded to WordPress

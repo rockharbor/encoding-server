@@ -27,20 +27,19 @@ log "Watching file: $FILE"
 
 wait_for_file "$FILE"
 
-EXT=$(echo "$FILE" | awk -F . '{if (NF>1) {print $NF}}')
-DATE=$(date -j -vsun +"%Y%m%d")
 FILEPATH=$(dirname "$FILE")
-
-OUTPUT="${FILEPATH}/Output"
-TMPVID="/tmp/${DATE}_${SUBDOMAIN}_message.mp4"
-TMPAUD="/tmp/${DATE}_${SUBDOMAIN}_message.mp3"
 
 log "Processing file: $FILE"
 
 # copy file to local disk
-FILENAME=$(basename $FILE)
+FILENAME=$(basename "$FILE")
+FILENAMENOEXT="${FILENAME%.*}"
 TMPFILE="/tmp/${FILENAME}"
 cp "$FILE" "/tmp/${FILENAME}"
+
+OUTPUT="${FILEPATH}/Output"
+TMPVID="/tmp/${FILENAMENOEXT}.mp4"
+TMPAUD="/tmp/${FILENAMENOEXT}.mp3"
 
 # convert video and save it in the output directory
 ffmpeg -i "$TMPFILE" \
@@ -67,22 +66,20 @@ ffmpeg -i "$TMPFILE" \
 # after converting it, move source file to correct path and
 # remove temporary file
 log "Moving source to: ${FILEPATH}/Source"
-mv -f "$FILE" "${FILEPATH}/Source/${DATE}_${SUBDOMAIN}_message.${EXT}"
+mv -f "$FILE" "${FILEPATH}/Source"
 rm "$TMPFILE"
 
 # upload video file 
 curl -i -F "file=@$TMPVID" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
 
 # move to the server
-VIDOUTPUT="${OUTPUT}/${DATE}_${SUBDOMAIN}_message.mp4"
-mv "$TMPVID" "$VIDOUTPUT"
+mv "$TMPVID" "${OUTPUT}"
 
 # upload audio file
 curl -i -F "file=@$TMPAUD" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
 
 # move to the server
-AUDOUTPUT="${OUTPUT}/${DATE}_${SUBDOMAIN}_message.mp3"
-mv "$TMPAUD" "$AUDOUTPUT"
+mv "$TMPAUD" "${OUTPUT}"
 
 ENDTIME=$(date +"%s")
 EXECTIME=$(expr $ENDTIME - $STARTTIME)
