@@ -19,7 +19,7 @@ EXECDIR="/encoder"
 
 # array of sites subdomains:folder
 ARRAY=(
-"www:RHC"
+"costamesa:RHC"
 "missionviejo:RHMV"
 "fullerton:RHF"
 "huntingtonbeach:RHHB"
