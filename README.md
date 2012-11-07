@@ -7,10 +7,12 @@ create an automated media encoding server.
 
 1. Install [watchdog][1] and [ffmpeg][2]
 
-2. Create a `wordpress.conf` file with the WordPress credentials (Please note the syntax -
+2. Create a `credentials.conf` file with the WordPress and Network storage credentials (Please note the syntax -
    no spaces and your user and password wrapped in double quotes.):
 
     ```
+    MEDIA_USER="network_username"
+    MEDIA_PASSWORD="network_password"
     WP_USER="wordpress_user"
     WP_PASSWORD="wordpress_password"
     ```
@@ -49,7 +51,7 @@ Below is an explaination of the watch/encode/upload process.
 
 ## Plans
 
-1. Remove all hardcoded stuff
+1. Remove all hardcoded stuff, like paths to network drives
 2. Create a start/stop action: `encoding-server start`
 
 [1]: https://github.com/gorakhargosh/watchdog

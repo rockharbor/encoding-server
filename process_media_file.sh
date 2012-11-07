@@ -8,12 +8,17 @@ STARTTIME=$(date +"%s")
 # Calls a webhook that adds the file to the WordPress media library when
 # a file is completely copied / created
 
-# import wordpress credentials
-. "wordpress.conf"
+# import credentials
+. "credentials.conf"
 
 FILE="$1"
 EVENT="$2"
 SUBDOMAIN="$3"
+
+# New storage path
+STOREPATH="$4"
+OUTPUT="$STOREPATH/Output"
+SOURCE="$STOREPATH/Source"
 
 # only process valid files
 valid_file "$FILE"
@@ -27,8 +32,6 @@ log "Watching file: $FILE"
 
 wait_for_file "$FILE"
 
-FILEPATH=$(dirname "$FILE")
-
 log "Processing file: $FILE"
 
 # copy file to local disk
@@ -37,7 +40,6 @@ FILENAMENOEXT="${FILENAME%.*}"
 TMPFILE="/tmp/${FILENAME}"
 cp "$FILE" "/tmp/${FILENAME}"
 
-OUTPUT="${FILEPATH}/Output"
 TMPVID="/tmp/${FILENAMENOEXT}.mp4"
 TMPAUD="/tmp/${FILENAMENOEXT}.mp3"
 
@@ -65,8 +67,8 @@ ffmpeg -i "$TMPFILE" \
 
 # after converting it, move source file to correct path and
 # remove temporary file
-log "Moving source to: ${FILEPATH}/Source"
-mv -f "$FILE" "${FILEPATH}/Source"
+log "Moving source to: ${SOURCE}"
+mv -f "$FILE" "${SOURCE}"
 rm "$TMPFILE"
 
 # upload video file 
