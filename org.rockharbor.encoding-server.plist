@@ -14,8 +14,6 @@
                 <true/>
         <key>WorkingDirectory</key>
                 <string>/encoder</string>
-        <key>UserName</key>
-                <string>commvolunteer</string>
 	<key>StandardErrorPath</key>
 		<string>encoding.log</string>
 	<key>StandardOutPath</key>
