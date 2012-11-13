@@ -37,8 +37,8 @@ log "Processing file: $FILE"
 # copy file to local disk
 FILENAME=$(basename "$FILE")
 FILENAMENOEXT="${FILENAME%.*}"
-TMPFILE="/tmp/${FILENAME}"
-cp "$FILE" "/tmp/${FILENAME}"
+TMPFILE="/tmp/${FILENAME}.tmp"
+mv "$FILE" "$TMPFILE"
 
 TMPVID="/tmp/${FILENAMENOEXT}.mp4"
 TMPAUD="/tmp/${FILENAMENOEXT}.mp3"
@@ -68,7 +68,7 @@ ffmpeg -i "$TMPFILE" \
 # after converting it, move source file to correct path and
 # remove temporary file
 log "Moving source to: ${SOURCE}"
-mv -f "$FILE" "${SOURCE}"
+cp -f "$TMPFILE" "${SOURCE}/${FILENAME}"
 rm "$TMPFILE"
 
 # upload video file 
