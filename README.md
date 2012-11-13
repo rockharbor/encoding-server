@@ -17,7 +17,8 @@ create an automated media encoding server.
     WP_PASSWORD="wordpress_password"
     ```
 
-3. From the terminal in the directory these scripts are located, run `encoding-server`
+3. Copy the `plist` file to `/System/Library/LaunchDaemons` and give it the proper permissions: 644 / root:wheel
+4. From the terminal in the directory these scripts are located, run `encoding-server`
 
 ## Directory structure
 
