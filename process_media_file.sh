@@ -44,7 +44,7 @@ log "Processing file: $FILE"
 FILENAME=$(basename "$FILE")
 FILENAMENOEXT="${FILENAME%.*}"
 TMPFILE="/tmp/${FILENAME}.tmp"
-mv "$FILE" "$TMPFILE"
+mv -f "$FILE" "$TMPFILE"
 
 TMPVID="/tmp/${FILENAMENOEXT}.mp4"
 TMPAUD="/tmp/${FILENAMENOEXT}.mp3"
