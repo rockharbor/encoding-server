@@ -11,7 +11,7 @@ STARTTIME=$(date +"%s")
 # import credentials
 . "credentials.conf"
 
-FILE="$1"
+DIR="$1"
 EVENT="$2"
 SUBDOMAIN="$3"
 
@@ -20,11 +20,17 @@ STOREPATH="$4"
 OUTPUT="$STOREPATH/Output"
 SOURCE="$STOREPATH/Source"
 
-# only process valid files
-valid_file "$FILE"
+# only process renamed files (the FTP system renames them
+# from a temporary name to the actual name)
+if [ "$EVENT" != "modified" ]; then
+	exit 0
+fi
 
-# only process new files
-if [ ! -f "$FILE" -o "$EVENT" != "created" ]; then
+# Find newest file within the directory
+FILE=$(find "$DIR" -type f -maxdepth 1 | head -n 1)
+
+log "$EVENT: $FILE"
+if [ ! -f "$FILE" ]; then
 	exit 0
 fi
 
