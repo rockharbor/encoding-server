@@ -8,7 +8,6 @@ LOG=encoding.log
 if [ ! -f "$LOG" ]; then
 	> $LOG
 fi
-exec 1>$LOG
 
 if [ ! -f "credentials.conf" ]; then
 	log "Missing credentials"
