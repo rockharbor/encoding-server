@@ -16,12 +16,6 @@ fi
 
 . credentials.conf
 
-# mount network drive
-mkdir /Volumes/Media
-chown $MEDIA_USER /Volumes/Media
-mount_smbfs //$MEDIA_USER:$MEDIA_PASSWORD@10.0.0.5/Media /Volumes/Media/
-log "mount_smbfs //$MEDIA_USER:$MEDIA_PASSWORD@10.0.0.5/Media /Volumes/Media/"
-
 EXECDIR="/encoder"
 
 # array of sites subdomains:folder
@@ -35,7 +29,7 @@ ARRAY=(
 
 PREFIX="/FTP"
 
-STOREPATH="/Volumes/Media/FTP/Messages"
+STOREPATH="/MediaVault/FTP/Messages"
 
 for S in ${ARRAY[@]}; do
 	SUBDOMAIN=${S%%:*}
