@@ -75,7 +75,6 @@ ffmpeg -i "$TMPFILE" \
 # remove temporary file
 log "Moving source to: ${SOURCE}"
 cp -f "$TMPFILE" "${SOURCE}/${FILENAME}"
-rm "$TMPFILE"
 
 # upload video file 
 curl -i -F "file=@$TMPVID" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
