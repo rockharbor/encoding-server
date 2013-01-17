@@ -11,14 +11,12 @@ create an automated media encoding server.
    no spaces and your user and password wrapped in double quotes.):
 
     ```
-    MEDIA_USER="network_username"
-    MEDIA_PASSWORD="network_password"
     WP_USER="wordpress_user"
     WP_PASSWORD="wordpress_password"
     ```
 
-3. Copy the `plist` file to `/System/Library/LaunchDaemons` and give it the proper permissions: 644 / root:wheel
-4. From the terminal in the directory these scripts are located, run `encoding-server`
+3. Copy the `plist` file to `/System/Library/LaunchDaemons` and give it the proper permissions: 644 / root:wheel. This allows the watch processes to be run automatically.
+4. From the terminal in the directory these scripts are located, run `encoding-server`, or reboot
 
 ## Directory structure
 
@@ -26,29 +24,25 @@ The watch directories are hardcoded into the `encoding-server` script. The basic
 looks like this:
 
     ```
-    /Volumes
-      /Media
-        /FTP
-          /Messages
-            /<campus_short_name>
-              /Output
-              /Source
+    /FTP
+      /<campus_short_name>
     ```
 
-Where `<campus_short_name>` is RHO, RHMV, etc. 
+Where `<campus_short_name>` is RHO, RHMV, etc. Once received, they are stored in an Output and Source folder within the campus short name folder within the `STOREPATH` directory, as defined in the `encoding-server` script.
 
 ## Workflow
 
 Below is an explaination of the watch/encode/upload process.
 
 1. The scripts start watching the FTP folders
-2. When a file is detected, it is watched until it is fully uploaded
-3. After the upload completes, the file is converted using ffmpeg into a
+2. After the file is uploaded, the FTP server renames it, which triggers the watch
+3. The process scripts are then triggered and find the most recent file
+4. The file is then converted using ffmpeg into a
    streaming video file as well as an mp3.
-4. When the encoding process completes, the source moved 
+5. When the encoding process completes, the source moved 
    into the `Source` folder, and the converted files are moved into the
-   `Output` folder.
-5. Finally, the two output files are uploaded to WordPress
+   `Output` folder. These folders are explained in the Directory Structure section.
+6. Finally, the two output files are uploaded to WordPress
 
 ## Plans
 
