@@ -82,13 +82,13 @@ cp -f "$TMPFILE" "${SOURCE}/${FILENAME}"
 curl -i -F "file=@$TMPVID" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
 
 # move to the server
-mv "$TMPVID" "${OUTPUT}"
+cp "$TMPVID" "${OUTPUT}"
 
 # upload audio file
 curl -i -F "file=@$TMPAUD" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
 
 # move to the server
-mv "$TMPAUD" "${OUTPUT}"
+cp "$TMPAUD" "${OUTPUT}"
 
 ENDTIME=$(date +"%s")
 EXECTIME=$(expr $ENDTIME - $STARTTIME)
