@@ -38,6 +38,8 @@ log "Watching file: $FILE"
 
 wait_for_file "$FILE"
 
+valid_file "$FILE"
+
 log "Processing file: $FILE"
 
 # copy file to local disk
