@@ -2,6 +2,8 @@
 
 # This file contains all common functions used by the media scripts
 
+LOG=encoding.log
+
 # Checks if we should operate on this file
 function valid_file() {
 	shopt -s nocasematch
@@ -14,8 +16,13 @@ function valid_file() {
 }
 
 function log() {
+	if [ -n "$1" ]; then
+		IN="$1"
+	else
+		read IN
+	fi
 	local NOW=$(date)
-	echo "[$NOW]: $1"
+	echo "[$NOW]: $IN" >> $LOG
 }
 
 # checks a file until it is completely copied. OSX triggers the "created"

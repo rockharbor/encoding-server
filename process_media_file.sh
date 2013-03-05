@@ -4,6 +4,10 @@ STARTTIME=$(date +"%s")
 
 . media_common.sh
 
+# redirect stdout and stderr to log
+exec 1> >(log)
+exec 2>&1
+
 # Script triggered by `watchdog` when a file is created within a directory.
 # Calls a webhook that adds the file to the WordPress media library when
 # a file is completely copied / created
@@ -61,14 +65,14 @@ ffmpeg -i "$TMPFILE" \
 -threads 0 \
 -acodec libvo_aacenc \
 -b:a 128k \
-"$TMPVID"
+"$TMPVID" 1>/dev/null
 
 # convert audio and save it in the output directory
 ffmpeg -i "$TMPFILE" \
 -acodec libmp3lame \
 -b:a 128k \
 -vn \
-"$TMPAUD"
+"$TMPAUD" 1>/dev/null
 
 # after converting it, move source file to correct path and
 # remove temporary file
@@ -76,13 +80,13 @@ log "Moving source to: ${SOURCE}"
 cp -f "$TMPFILE" "${SOURCE}/${FILENAME}"
 
 # upload video file 
-curl -i -F "file=@$TMPVID" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
+curl -i -F "file=@$TMPVID" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php 1>/dev/null
 
 # move to the server
 cp "$TMPVID" "${OUTPUT}"
 
 # upload audio file
-curl -i -F "file=@$TMPAUD" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php
+curl -i -F "file=@$TMPAUD" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php 1>/dev/null
 
 # move to the server
 cp "$TMPAUD" "${OUTPUT}"

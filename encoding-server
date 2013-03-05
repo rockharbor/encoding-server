@@ -2,8 +2,6 @@
 
 . media_common.sh
 
-LOG=encoding.log
-
 # create log file
 if [ ! -f "$LOG" ]; then
 	> $LOG
