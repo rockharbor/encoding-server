@@ -39,9 +39,10 @@ valid_file "$FILE"
 log "Processing file: $FILE"
 
 # copy file to local disk
+NOW=$(date +%s)
 FILENAME=$(basename "$FILE")
 FILENAMENOEXT="${FILENAME%.*}"
-TMPFILE="/tmp/${FILENAME}.tmp"
+TMPFILE="/tmp/${SUBDOMAIN}${NOW}.tmp"
 mv -f "$FILE" "$TMPFILE"
 
 TMPVID="/tmp/${FILENAMENOEXT}.mp4"
