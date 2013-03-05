@@ -30,7 +30,7 @@ function wait_for_file() {
 	BYTESLATER=$(stat -f '%z' "$FILE")
 	while [ "$BYTESNOW" -ne "$BYTESLATER" ]; do
 		BYTESNOW=$(stat -f '%z' "$FILE")
-		sleep 10
+		sleep 60
 		BYTESLATER=$(stat -f '%z' "$FILE")
 	done
 }
