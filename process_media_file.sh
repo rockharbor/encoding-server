@@ -33,24 +33,30 @@ fi
 # Find newest file within the directory
 FILE=$(find "$DIR" -type f -maxdepth 1 | head -n 1)
 
-log "$EVENT: $FILE"
-log "Watching file: $FILE"
+log "Watching dir: $DIR"
 
-wait_for_file "$FILE"
-
+# make sure it's a file we want, then wait for it
 valid_file "$FILE"
+wait_for_file "$FILE"
 
 log "Processing file: $FILE"
 
-# copy file to local disk
-NOW=$(date +%s)
-FILENAME=$(basename "$FILE")
-FILENAMENOEXT="${FILENAME%.*}"
-TMPFILE="/tmp/${SUBDOMAIN}${NOW}.tmp"
-mv -f "$FILE" "$TMPFILE"
+# set up naming variables
+BASENAME=$(basename "$FILE")
+FILENAME="${BASENAME%.*}"
 
-TMPVID="/tmp/${FILENAMENOEXT}.mp4"
-TMPAUD="/tmp/${FILENAMENOEXT}.mp3"
+# create temporary namespaced, timestamped directory
+NOW=$(date +%s)
+TMPFOLDER="/tmp/${SUBDOMAIN}/${NOW}"
+mkdir -p "$TMPFOLDER"
+
+# set up temp file names
+TMPFILE="${TMPFOLDER}/${BASENAME}.source"
+TMPVIDFILE="${TMPFOLDER}/${FILENAME}.mp4"
+TMPAUDFILE="${TMPFOLDER}/${FILENAME}.mp3"
+
+# move from uploaded location to temp
+mv "$FILE" "$TMPFILE"
 
 # convert video and save it in the output directory
 ffmpeg -i "$TMPFILE" \
@@ -65,31 +71,30 @@ ffmpeg -i "$TMPFILE" \
 -threads 0 \
 -acodec libvo_aacenc \
 -b:a 128k \
-"$TMPVID" 1>/dev/null
+"$TMPVIDFILE" 1>/dev/null
 
 # convert audio and save it in the output directory
 ffmpeg -i "$TMPFILE" \
 -acodec libmp3lame \
 -b:a 128k \
 -vn \
-"$TMPAUD" 1>/dev/null
+"$TMPAUDFILE" 1>/dev/null
 
-# after converting it, move source file to correct path and
-# remove temporary file
-log "Moving source to: ${SOURCE}"
-cp -f "$TMPFILE" "${SOURCE}/${FILENAME}"
+# after converting it, copy to source path
+log "Copying source to: ${SOURCE}"
+cp "$TMPFILE" "${SOURCE}/${BASENAME}"
 
 # upload video file 
-curl -i -F "file=@$TMPVID" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php 1>/dev/null
+curl -i -F "file=@$TMPVIDFILE" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php 1>/dev/null
 
-# move to the server
-cp "$TMPVID" "${OUTPUT}"
+# copy to output path
+cp "$TMPVIDFILE" "${OUTPUT}"
 
 # upload audio file
-curl -i -F "file=@$TMPAUD" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php 1>/dev/null
+curl -i -F "file=@$TMPAUDFILE" -F "username=$WP_USER" -F "password=$WP_PASSWORD" http://$SUBDOMAIN.rockharbor.org/wp-content/themes/rockharbor/upload.php 1>/dev/null
 
-# move to the server
-cp "$TMPAUD" "${OUTPUT}"
+# copy to output path
+cp "$TMPAUDFILE" "${OUTPUT}"
 
 ENDTIME=$(date +"%s")
 EXECTIME=$(expr $ENDTIME - $STARTTIME)
