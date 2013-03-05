@@ -30,10 +30,6 @@ fi
 FILE=$(find "$DIR" -type f -maxdepth 1 | head -n 1)
 
 log "$EVENT: $FILE"
-if [ ! -f "$FILE" ]; then
-	exit 0
-fi
-
 log "Watching file: $FILE"
 
 wait_for_file "$FILE"

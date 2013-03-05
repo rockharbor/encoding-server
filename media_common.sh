@@ -23,6 +23,9 @@ function log() {
 # a test to see if the bytes have changed
 function wait_for_file() {
 	FILE="$1"
+	if [ ! -f "$FILE" ]; then
+		exit 0
+	fi
 	BYTESNOW=-1
 	BYTESLATER=$(stat -f '%z' "$FILE")
 	while [ "$BYTESNOW" -ne "$BYTESLATER" ]; do
