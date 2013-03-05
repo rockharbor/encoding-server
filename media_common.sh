@@ -5,7 +5,7 @@
 # Checks if we should operate on this file
 function valid_file() {
 	shopt -s nocasematch
-	REGEX=".\.(mp4|mov|mpg)$"
+	local REGEX=".\.(mp4|mov|mpg)$"
 	if echo $1 | grep -Eq "$REGEX" ; then
 		return 1
 	else
@@ -14,7 +14,7 @@ function valid_file() {
 }
 
 function log() {
-	NOW=$(date)
+	local NOW=$(date)
 	echo "[$NOW]: $1"
 }
 
@@ -22,12 +22,12 @@ function log() {
 # event before with 0 bytes and copies one file at a time, so use -1 as
 # a test to see if the bytes have changed
 function wait_for_file() {
-	FILE="$1"
+	local FILE="$1"
 	if [ ! -f "$FILE" ]; then
 		exit 0
 	fi
-	BYTESNOW=-1
-	BYTESLATER=$(stat -f '%z' "$FILE")
+	local BYTESNOW=-1
+	local BYTESLATER=$(stat -f '%z' "$FILE")
 	while [ "$BYTESNOW" -ne "$BYTESLATER" ]; do
 		BYTESNOW=$(stat -f '%z' "$FILE")
 		sleep 60
