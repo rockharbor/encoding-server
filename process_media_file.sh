@@ -31,19 +31,25 @@ if [ "$EVENT" != "modified" ]; then
 fi
 
 # Find newest file within the directory
-FILE=$(find "$DIR" -type f -maxdepth 1 | head -n 1)
+FILE=$(find_first_uncopied_file "$DIR" /tmp)
 
-log "Watching dir: $DIR"
+if [ "$FILE" = "0" ]; then
+	log "$EVENT event could not find pending file in $DIR"
+	exit 0
+fi
 
-# make sure it's a file we want, then wait for it
-valid_file "$FILE"
-wait_for_file "$FILE"
-
-log "Processing file: $FILE"
+log "Found valid file $FILE"
 
 # set up naming variables
 BASENAME=$(basename "$FILE")
 FILENAME="${BASENAME%.*}"
+
+wait_for_file "$FILE"
+
+log "Processing file: $FILE"
+
+# create flag so we don't touch this file again
+touch "/tmp/${BASENAME}.encoding"
 
 # create temporary namespaced, timestamped directory
 NOW=$(date +%s)
@@ -100,5 +106,8 @@ ENDTIME=$(date +"%s")
 EXECTIME=$(expr $ENDTIME - $STARTTIME)
 
 log "Processing completed (${EXECTIME}s): $FILE"
+
+# remove flag
+rm "/tmp/${BASENAME}.encoding"
 
 exit 0
