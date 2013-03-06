@@ -30,6 +30,10 @@ if [ "$EVENT" != "modified" ]; then
 	exit 0
 fi
 
+# wait a random amount of seconds between 1-10
+# this prevents simultaneous uploads from overlapping
+sleep $[ ( $RANDOM % 30 ) + 1 ]s
+
 # Find newest file within the directory
 FILE=$(find_first_uncopied_file "$DIR" /tmp)
 
