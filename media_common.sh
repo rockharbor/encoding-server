@@ -42,20 +42,3 @@ function find_first_uncopied_file() {
 	echo "0"
 }
 
-# checks a file until it is completely copied. OSX triggers the "created"
-# event before with 0 bytes and copies one file at a time, so use -1 as
-# a test to see if the bytes have changed
-function wait_for_file() {
-	local FILE="$1"
-	if [ ! -f "$FILE" ]; then
-		log "$FILE is not a file"
-		exit 0
-	fi
-	local BYTESNOW=-1
-	local BYTESLATER=$(stat -f '%z' "$FILE")
-	while [ "$BYTESNOW" -ne "$BYTESLATER" ]; do
-		BYTESNOW=$(stat -f '%z' "$FILE")
-		sleep 60
-		BYTESLATER=$(stat -f '%z' "$FILE")
-	done
-}

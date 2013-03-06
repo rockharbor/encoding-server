@@ -44,8 +44,6 @@ log "Found valid file $FILE"
 BASENAME=$(basename "$FILE")
 FILENAME="${BASENAME%.*}"
 
-wait_for_file "$FILE"
-
 log "Processing file: $FILE"
 
 # create flag so we don't touch this file again
